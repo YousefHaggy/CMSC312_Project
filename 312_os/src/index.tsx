@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Kernel from './Kernel';
+import Simulator from './Simulator';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Kernel />
+    <Simulator />
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -17,7 +17,7 @@ useEffect(() => {
 }, [])
 
 
-function Kernel(): JSX.Element {
+function Simulator(): JSX.Element {
   return (
     <div className="App">
       <h1>test</h1>
@@ -25,4 +25,4 @@ function Kernel(): JSX.Element {
   );
 }
 
-export default Kernel;
+export default Simulator;
