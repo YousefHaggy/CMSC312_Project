@@ -1,0 +1,1 @@
+- Use event emitter to communicate between scheduler and processes
