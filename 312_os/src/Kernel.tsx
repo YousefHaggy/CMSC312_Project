@@ -2,10 +2,10 @@ import React, {useEffect} from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-const msPerCycle = 10;
+const msPerCycle = 1000;
 
 function mainLoop(){
-
+  // Check current
 }
 
 useEffect(() => {
