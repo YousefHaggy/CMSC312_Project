@@ -2,6 +2,12 @@
 // Contains all templates
 import Instruction from "./Instruction";
 
+const calculator: Instruction[] = [
+  { type: "CPU", minCycles: 10, maxCycles: 20 },
+  { type: "CPU", minCycles: 10, maxCycles: 20 },
+  { type: "CPU", minCycles: 10, maxCycles: 20 },
+  { type: "CPU", minCycles: 10, maxCycles: 20 },
+];
 const browser: Instruction[] = [
   { type: "CPU", minCycles: 10, maxCycles: 20 },
   { type: "IO", minCycles: 5, maxCycles: 10 },
@@ -15,4 +21,4 @@ const printer: Instruction[] = [
   { type: "END_CRITICAL", minCycles: 0, maxCycles: 0 },
 ];
 
-export { browser, printer };
+export { browser, printer, calculator };

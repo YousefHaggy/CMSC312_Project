@@ -1,4 +1,5 @@
 import Instruction from "./Instruction";
+import Scheduler from "./Scheduler";
 
 type State = "new" | "ready" | "waiting" | "running" | "terminated";
 // Process & PCB class
@@ -9,6 +10,9 @@ class Process {
   currentIntructionIndex: number = 0;
   remaingCyclesForInstruction: number = 0;
   isInCriticalSection: boolean = false;
+
+  // Pointer to scheduler
+  scheduler!: Scheduler;
   constructor(pid: number, template: Instruction[]) {
     this.id = pid;
     // TODO: Once we introduce memory management and a long term Job Queue, state should start as "new"
@@ -31,11 +35,23 @@ class Process {
   }
   executeInstruction(): void {
     // If instruction is just marking critical section, move to next instruction
-    if (
-      this.instructions[this.currentIntructionIndex].type == "START_CRITICAL"
+    switch (
+      this.instructions[this.currentIntructionIndex].type
     ) {
-      this.isInCriticalSection = true;
-      this.nextInstruction();
+      case "START_CRITICAL":
+        this.isInCriticalSection = true;
+        this.nextInstruction();
+        break;
+      case "END_CRITICAL":
+        this.isInCriticalSection = false;
+        this.nextInstruction();
+        break;
+      // case "IO":
+      //   this.setState("waiting")
+      //   break;
+      // case "CPU":
+      //   this.setState("running")
+      //   break;
     }
 
     this.remaingCyclesForInstruction -= 1;
