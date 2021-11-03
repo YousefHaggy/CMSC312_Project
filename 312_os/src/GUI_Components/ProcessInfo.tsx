@@ -14,6 +14,8 @@ function ProcessInfo(props: any): JSX.Element {
       <h5>
         Remaing Cycles for Instruction: {process.remaingCyclesForInstruction}
       </h5>
+      <h5>Instructions:</h5>
+      {process.instructions.map(({type, numCycles})=>(<p>{type} {numCycles}</p>))}
     </div>
   );
 }

@@ -3,8 +3,11 @@ import "./App.css";
 import CPU from "./Classes/CPU";
 import Process from "./Classes/Process";
 import Program from "./GUI_Components/Program";
-import { calculator } from "./Classes/templates";
-import calculatorImage from "./images/logo.png";
+import { calculator, browser, printer } from "./Classes/templates";
+import calculatorImage from "./images/calc.png";
+import browserImage from "./images/browser.png";
+import printerImage from "./images/printer.png";
+
 import ProcessInfo from "./GUI_Components/ProcessInfo";
 const msPerCycle = 200;
 
@@ -40,6 +43,15 @@ function Simulator(): JSX.Element {
           template={calculator}
           scheduler={cpu.scheduler}
         />
+         <Program
+          image={browserImage}
+          template={browser}
+          scheduler={cpu.scheduler}
+        /> <Program
+        image={printerImage}
+        template={printer}
+        scheduler={cpu.scheduler}
+      />
       </div>
       <h1>Ready Queue</h1>
       <div style={{display:"flex"}}> 

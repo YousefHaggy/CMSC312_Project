@@ -14,6 +14,6 @@ function Program(props: any): JSX.Element {
     const process = new Process(Math.floor(Math.random() * 10000), template, scheduler);
     scheduler.scheduleProcess(process);
   };
-  return <img src={image} onClick={()=>handleProgramClick()} />;
+  return <img src={image} width="100" height="100" onClick={()=>handleProgramClick()} />;
 }
 export default Program;
