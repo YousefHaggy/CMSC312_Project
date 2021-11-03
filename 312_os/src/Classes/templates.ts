@@ -25,6 +25,7 @@ const printer: Instruction[] = [
   { type: "IO", minCycles: 10, maxCycles: 20 },
   { type: "IO", minCycles: 10, maxCycles: 20 },
   { type: "IO", minCycles: 10, maxCycles: 20 },
+  { type: "CPU", minCycles: 10, maxCycles: 20 },
 ];
 
 export { browser, printer, calculator };
