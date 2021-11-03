@@ -23,7 +23,7 @@ class Scheduler {
             // Change from running to ready
             timeExceededProcess.setState("ready")
             this.readyQueue.splice(0,1)
-            this.readyQueue.push(timeExceededProcess)
+            this.scheduleProcess(timeExceededProcess)
             this.elapsedTimeForActiveProcess = 0 ;
         }
         else{
@@ -32,6 +32,9 @@ class Scheduler {
     }
 
     scheduleProcess(process: Process): void{
+        // If it's already in queue skip
+        if (this.readyQueue.find((proc)=> proc.id == process.id))
+            return
         this.readyQueue.push(process)
     }
 }

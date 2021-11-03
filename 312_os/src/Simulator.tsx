@@ -6,7 +6,7 @@ import Program from "./GUI_Components/Program";
 import { calculator } from "./Classes/templates";
 import calculatorImage from "./images/logo.png";
 import ProcessInfo from "./GUI_Components/ProcessInfo";
-const msPerCycle = 1000;
+const msPerCycle = 200;
 
 const cpu = new CPU();
 
@@ -25,7 +25,7 @@ function Simulator(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    console.log(readyQueue);
+    console.log(cpu.scheduler.readyQueue, cpu.scheduler.IOQueue);
     // Update state variables for UI
     setReadyQueue(cpu.scheduler.readyQueue);
     setIOQueue(cpu.scheduler.IOQueue);

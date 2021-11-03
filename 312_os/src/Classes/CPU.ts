@@ -32,15 +32,15 @@ class CPU {
       const waitingProcess: Process = IOQueue[0];
       // If next instruction is CPU, move to Ready queue
       if (
-        this.currentProcess.instructions[
-          this.currentProcess.currentIntructionIndex
+        waitingProcess.instructions[
+          waitingProcess.currentIntructionIndex
         ].type == "CPU"
       ) {
-        this.currentProcess.setState("ready");
-        this.scheduler.readyQueue.push(this.currentProcess);
-        IOQueue.splice(0, 1);
+        waitingProcess.setState("ready");
+        this.scheduler.scheduleProcess(waitingProcess);
+        IOQueue.splice(0, 1)
       } else {
-        this.currentProcess.setState("waiting");
+        waitingProcess.setState("waiting");
         waitingProcess.executeInstruction();
       }
     }

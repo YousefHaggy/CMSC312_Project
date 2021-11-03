@@ -12,7 +12,7 @@ function Program(props: any): JSX.Element {
   const handleProgramClick = () => {
     // TODO: Prevent duplicate IDs
     const process = new Process(Math.floor(Math.random() * 10000), template, scheduler);
-    scheduler.readyQueue.push(process);
+    scheduler.scheduleProcess(process);
   };
   return <img src={image} onClick={()=>handleProgramClick()} />;
 }

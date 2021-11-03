@@ -47,6 +47,7 @@ class Process {
         this.isInCriticalSection = false;
         this.nextInstruction();
         break;
+
     }
 
     this.remaingCyclesForInstruction -= 1;
