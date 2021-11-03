@@ -18,7 +18,9 @@ class Scheduler {
             this.readyQueue.splice(0,1)
             this.elapsedTimeForActiveProcess = 0 ;
         }
-        if (this.elapsedTimeForActiveProcess === this.timeQuantum){
+        // Single threaded Critical Section Resolving Scheme: The second condition here ensures that the RR scheduler will not
+        // remove a process that is currently in it's critical section. This ensures that at most one process is in a critical section at all times
+        if (this.elapsedTimeForActiveProcess === this.timeQuantum && !this.readyQueue[0].isInCriticalSection){
             const timeExceededProcess = this.readyQueue[0]
             // Change from running to ready
             timeExceededProcess.setState("ready")
