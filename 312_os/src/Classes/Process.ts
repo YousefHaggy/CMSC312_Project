@@ -12,8 +12,9 @@ class Process {
   isInCriticalSection: boolean = false;
 
   // Pointer to scheduler
-  scheduler!: Scheduler;
-  constructor(pid: number, template: Instruction[]) {
+  scheduler: Scheduler;
+  constructor(pid: number, template: Instruction[], scheduler: Scheduler) {
+    this.scheduler = scheduler;
     this.id = pid;
     // TODO: Once we introduce memory management and a long term Job Queue, state should start as "new"
     this.state = "ready";
@@ -27,17 +28,17 @@ class Process {
   nextInstruction() {
     if (this.currentIntructionIndex == this.instructions.length - 1) {
       this.state = "terminated";
-      return
-    } 
+      return;
+    }
     this.currentIntructionIndex += 1;
     this.remaingCyclesForInstruction =
       this.instructions[this.currentIntructionIndex].numCycles || 0;
+
+    const currentInstruction = this.instructions[this.currentIntructionIndex];
   }
   executeInstruction(): void {
     // If instruction is just marking critical section, move to next instruction
-    switch (
-      this.instructions[this.currentIntructionIndex].type
-    ) {
+    switch (this.instructions[this.currentIntructionIndex].type) {
       case "START_CRITICAL":
         this.isInCriticalSection = true;
         this.nextInstruction();
@@ -46,12 +47,6 @@ class Process {
         this.isInCriticalSection = false;
         this.nextInstruction();
         break;
-      // case "IO":
-      //   this.setState("waiting")
-      //   break;
-      // case "CPU":
-      //   this.setState("running")
-      //   break;
     }
 
     this.remaingCyclesForInstruction -= 1;

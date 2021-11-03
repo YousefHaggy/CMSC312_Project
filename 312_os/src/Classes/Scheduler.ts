@@ -20,8 +20,11 @@ class Scheduler {
         }
         if (this.elapsedTimeForActiveProcess === this.timeQuantum){
             const timeExceededProcess = this.readyQueue[0]
+            // Change from running to ready
+            timeExceededProcess.setState("ready")
             this.readyQueue.splice(0,1)
             this.readyQueue.push(timeExceededProcess)
+            this.elapsedTimeForActiveProcess = 0 ;
         }
         else{
             this.elapsedTimeForActiveProcess+=1

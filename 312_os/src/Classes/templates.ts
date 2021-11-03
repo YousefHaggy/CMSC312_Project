@@ -4,7 +4,7 @@ import Instruction from "./Instruction";
 
 const calculator: Instruction[] = [
   { type: "CPU", minCycles: 10, maxCycles: 20 },
-  { type: "CPU", minCycles: 10, maxCycles: 20 },
+  { type: "IO", minCycles: 5, maxCycles: 10 },
   { type: "CPU", minCycles: 10, maxCycles: 20 },
   { type: "CPU", minCycles: 10, maxCycles: 20 },
 ];

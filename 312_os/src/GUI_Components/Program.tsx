@@ -11,7 +11,7 @@ function Program(props: any): JSX.Element {
   }: { image: string; template: Instruction[]; scheduler: Scheduler } = props;
   const handleProgramClick = () => {
     // TODO: Prevent duplicate IDs
-    const process = new Process(Math.random() * 10000, template);
+    const process = new Process(Math.floor(Math.random() * 10000), template, scheduler);
     scheduler.readyQueue.push(process);
   };
   return <img src={image} onClick={()=>handleProgramClick()} />;
