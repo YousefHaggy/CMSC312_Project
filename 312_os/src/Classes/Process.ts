@@ -13,9 +13,11 @@ class Process {
 
   // Pointer to scheduler
   scheduler: Scheduler;
-  constructor(pid: number, template: Instruction[], scheduler: Scheduler) {
+  parent: Process | undefined;
+  constructor(pid: number, template: Instruction[], scheduler: Scheduler, parent?: Process) {
     this.scheduler = scheduler;
     this.id = pid;
+    this.parent = parent;
     // TODO: Once we introduce memory management and a long term Job Queue, state should start as "new"
     this.state = "ready";
     this.currentIntructionIndex = 0;
@@ -45,6 +47,12 @@ class Process {
         break;
       case "END_CRITICAL":
         this.isInCriticalSection = false;
+        this.nextInstruction();
+        break;
+      case "FORK":
+        const child = new Process(Math.floor(Math.random() * 10000), this.instructions, this.scheduler, this);
+        child.currentIntructionIndex = this.currentIntructionIndex + 1;
+        this.scheduler.scheduleProcess(child);
         this.nextInstruction();
         break;
 

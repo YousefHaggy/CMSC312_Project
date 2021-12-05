@@ -4,6 +4,7 @@ import Instruction from "./Instruction";
 
 const calculator: Instruction[] = [
   { type: "CPU", minCycles: 10, maxCycles: 20 },
+  { type: "FORK", minCycles: 0, maxCycles: 0 },
   { type: "START_CRITICAL", minCycles: 0, maxCycles: 0 },
   { type: "CPU", minCycles: 10, maxCycles: 20 },
   { type: "END_CRITICAL", minCycles: 0, maxCycles: 0 },
@@ -12,6 +13,7 @@ const calculator: Instruction[] = [
 ];
 const browser: Instruction[] = [
   { type: "START_CRITICAL", minCycles: 0, maxCycles: 0 },
+  { type: "FORK", minCycles: 0, maxCycles: 0 },
   { type: "CPU", minCycles: 10, maxCycles: 20 },
   { type: "END_CRITICAL", minCycles: 0, maxCycles: 0 },
   { type: "IO", minCycles: 5, maxCycles: 10 },
@@ -24,6 +26,7 @@ const printer: Instruction[] = [
   { type: "END_CRITICAL", minCycles: 0, maxCycles: 0 },
   { type: "IO", minCycles: 10, maxCycles: 20 },
   { type: "IO", minCycles: 10, maxCycles: 20 },
+  { type: "FORK", minCycles: 0, maxCycles: 0 },
   { type: "IO", minCycles: 10, maxCycles: 20 },
   { type: "CPU", minCycles: 10, maxCycles: 20 },
 ];
