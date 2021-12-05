@@ -9,6 +9,7 @@ function ProcessInfo(props: any): JSX.Element {
   return (
     <div style={{ backgroundColor: "lightblue", margin:10, padding:5 }}>
       <h5>ID: {process.id}</h5>
+      <h5>Size: {process.size.toFixed(0)} MB</h5>
       <h5>State: {process.state}</h5>
       <h5>IN CRITICAL SECTION? {String(process.isInCriticalSection)}</h5>
       <h5>Current Instruction Index: {process.currentIntructionIndex}</h5>
@@ -16,7 +17,7 @@ function ProcessInfo(props: any): JSX.Element {
         Remaing Cycles for Instruction: {process.remaingCyclesForInstruction}
       </h5>
       <h5>Instructions:</h5>
-      {process.instructions.map(({type, numCycles})=>(<p>{type} {numCycles}</p>))}
+      {process.instructions.map(({type, numCycles})=>(<p style={{fontSize:"10px", marginBottom:0}}>{type} {numCycles}</p>))}
     </div>
   );
 }

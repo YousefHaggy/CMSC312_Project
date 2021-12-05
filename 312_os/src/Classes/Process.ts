@@ -5,6 +5,8 @@ type State = "new" | "ready" | "waiting" | "running" | "terminated";
 // Process & PCB class
 class Process {
   id: number;
+  size: number;
+
   instructions: Instruction[];
   state: State;
   currentIntructionIndex: number = 0;
@@ -17,6 +19,8 @@ class Process {
   constructor(pid: number, template: Instruction[], scheduler: Scheduler, parent?: Process) {
     this.scheduler = scheduler;
     this.id = pid;
+    this.size = Math.random() * 100;
+    
     this.parent = parent;
     // TODO: Once we introduce memory management and a long term Job Queue, state should start as "new"
     this.state = "ready";
@@ -61,7 +65,7 @@ class Process {
     this.remaingCyclesForInstruction -= 1;
 
     // TODO: EXECUTE STUFF
-    if (this.remaingCyclesForInstruction == 0) {
+    if (this.remaingCyclesForInstruction <= 0) {
       this.nextInstruction();
     }
   }

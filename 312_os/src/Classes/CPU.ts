@@ -20,7 +20,7 @@ class CPU {
       ) {
         this.currentProcess.setState("waiting");
         this.scheduler.IOQueue.push(this.currentProcess);
-        readyQueue.splice(0, 1);
+        this.scheduler.removeHeadFromReadyQueue()
       } else {
         this.currentProcess.setState("running");
         this.currentProcess.executeInstruction();

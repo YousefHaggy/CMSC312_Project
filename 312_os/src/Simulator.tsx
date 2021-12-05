@@ -10,12 +10,12 @@ import printerImage from "./images/printer.png";
 
 import ProcessInfo from "./GUI_Components/ProcessInfo";
 const msPerCycle = 200;
-
 const cpu = new CPU();
 
 function Simulator(): JSX.Element {
   const [readyQueue, setReadyQueue] = useState<Process[]>([]);
   const [IOQueue, setIOQueue] = useState<Process[]>([]);
+  const [waitingQueue, setWaitingQueue] = useState<Process[]>([]);
 
   const [totalElapsedCycles, setTotalElapsedCycles] = useState(0);
   useEffect(() => {
@@ -32,6 +32,8 @@ function Simulator(): JSX.Element {
     // Update state variables for UI
     setReadyQueue(cpu.scheduler.readyQueue);
     setIOQueue(cpu.scheduler.IOQueue);
+    setWaitingQueue(cpu.scheduler.waitingQueue);
+
   }, [totalElapsedCycles]);
 
   return (
@@ -62,6 +64,12 @@ function Simulator(): JSX.Element {
       <h1>IO Queue</h1>
       <div style={{display:"flex"}}> 
         {IOQueue.map((process) => (
+          <ProcessInfo process={process} />
+        ))}
+      </div>
+      <h1>Waiting Queue</h1>
+      <div style={{display:"flex"}}> 
+        {waitingQueue.map((process) => (
           <ProcessInfo process={process} />
         ))}
       </div>
