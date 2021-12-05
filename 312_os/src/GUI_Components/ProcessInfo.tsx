@@ -8,16 +8,16 @@ function ProcessInfo(props: any): JSX.Element {
 
   return (
     <div style={{ backgroundColor: "lightblue", margin:10, padding:5 }}>
-      <h5>ID: {process.id}</h5>
-      <h5>Size: {process.size.toFixed(0)} MB</h5>
-      <h5>State: {process.state}</h5>
-      <h5>IN CRITICAL SECTION? {String(process.isInCriticalSection)}</h5>
-      <h5>Current Instruction Index: {process.currentIntructionIndex}</h5>
-      <h5>
+      <h6 style={{margin:2}}>ID: {process.id}</h6>
+      <h6 style={{margin:2}}>Size: {process.size.toFixed(0)} MB</h6>
+      <h6 style={{margin:2}}>State: {process.state}</h6>
+      <h6 style={{margin:2}}>IN CRITICAL SECTION? {String(process.isInCriticalSection)}</h6>
+      <h6 style={{margin:2}}>Current Instruction Index: {process.currentIntructionIndex}</h6>
+      <h6 style={{margin:2}}>
         Remaing Cycles for Instruction: {process.remaingCyclesForInstruction}
-      </h5>
-      <h5>Instructions:</h5>
-      {process.instructions.map(({type, numCycles})=>(<p style={{fontSize:"10px", marginBottom:0}}>{type} {numCycles}</p>))}
+      </h6>
+      <h6 style={{margin:2}}>Instructions:</h6>
+      {process.instructions.map(({type, numCycles})=>(<p style={{fontSize:"10px", margin:0}}>{type} {numCycles}</p>))}
     </div>
   );
 }

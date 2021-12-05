@@ -38,6 +38,7 @@ function Simulator(): JSX.Element {
 
   return (
     <div className="App">
+<h1>Memory in use: {readyQueue.reduce((sum, proc)=> sum + proc.size, 0).toFixed(0)} / 1024 MB</h1>
       <h1>Programs</h1>
       <div>
         <Program
