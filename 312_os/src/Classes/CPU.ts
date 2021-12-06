@@ -8,8 +8,8 @@ class CPU {
 
   // TODO: Variable for # of thread
   constructor(){
-    for(let i =0; i < 4; i ++){
-      const thread = new Thread();
+    for(let i = 0 ; i < 4; i ++){
+      const thread = new Thread(i);
       thread.scheduler = this.scheduler;
       this.threads.push(thread)
     }
@@ -19,16 +19,13 @@ class CPU {
     // Update the queue
     this.scheduler.updateQueue();
 
-    const { readyQueue, IOQueue } = this.scheduler;
+    const { IOQueue } = this.scheduler;
 
-    if (!this.threads[0].currentProcess)
-    this.threads[0].currentProcess = readyQueue[0];
-
-    // TODO: loop through threads
+    // Loop through each thread
     this.threads.forEach((thread)=>{
       thread.cycle();
     })
-    console.log(this.scheduler.elapsedTimeForActiveProcess)
+
     // Incremement cycle on process waiting in IO queue
     if (!!IOQueue?.length) {
       const waitingProcess: Process = IOQueue[0];

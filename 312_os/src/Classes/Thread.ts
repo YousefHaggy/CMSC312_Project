@@ -4,12 +4,16 @@ import Scheduler from "./Scheduler";
 import Process from "./Process";
 
 class Thread{
+    index: number;
     scheduler: Scheduler = new Scheduler();
     currentProcess: Process | undefined;
+    constructor(index: number){
+        this.index = index;
+    }
     setCurrentProcess(process: Process): void{
         this.currentProcess = process;
     }
-    cycle(): void {
+    async cycle(): Promise<void> {
         console.log(this.currentProcess?.id)
       // Target current process for execution
     //   if (!!this.currentProcess) {
@@ -32,8 +36,8 @@ class Thread{
     //     }
     //   }
     const {readyQueue} = this.scheduler;
-    if (!!readyQueue?.length) {
-        this.currentProcess = readyQueue[0];
+    if (!!readyQueue?.length && readyQueue.length > this.index) {
+        this.currentProcess = readyQueue[this.index];
         // If next instruction is IO, move to IO queue
         if (
           this.currentProcess.instructions[
@@ -42,7 +46,7 @@ class Thread{
         ) {
           this.currentProcess.setState("waiting");
           this.scheduler.IOQueue.push(this.currentProcess);
-          this.scheduler.removeProcessFromReadyQueue(readyQueue[0])
+          this.scheduler.removeProcessFromReadyQueue(readyQueue[this.index])
         } else {
           this.currentProcess.setState("running");
           this.currentProcess.executeInstruction();
