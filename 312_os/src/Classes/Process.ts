@@ -1,18 +1,19 @@
 import Instruction from "./Instruction";
 import Scheduler from "./Scheduler";
+import Thread from "./Thread";
 
 type State = "new" | "ready" | "waiting" | "running" | "terminated";
 // Process & PCB class
 class Process {
   id: number;
   size: number;
-
+  
   instructions: Instruction[];
   state: State;
   currentIntructionIndex: number = 0;
   remaingCyclesForInstruction: number = 0;
   isInCriticalSection: boolean = false;
-
+  elapsedTimeSinceBurst: number = 0;
   // Pointer to scheduler
   scheduler: Scheduler;
   parent: Process | undefined;
@@ -63,7 +64,7 @@ class Process {
     }
 
     this.remaingCyclesForInstruction -= 1;
-
+    this.elapsedTimeSinceBurst +=1;
     // TODO: EXECUTE STUFF
     if (this.remaingCyclesForInstruction <= 0) {
       this.nextInstruction();

@@ -16,7 +16,7 @@ class Scheduler {
             return
         }
         else if(this.readyQueue[0].state ==="terminated"){
-            this.removeHeadFromReadyQueue()
+            this.removeProcessFromReadyQueue(this.readyQueue[0])
             this.elapsedTimeForActiveProcess = 0 ;
         }
         // Single threaded Critical Section Resolving Scheme: The second condition here ensures that the RR scheduler will not
@@ -25,7 +25,7 @@ class Scheduler {
             const timeExceededProcess = this.readyQueue[0]
             // Change from running to ready
             timeExceededProcess.setState("ready")
-            this.removeHeadFromReadyQueue()
+            this.removeProcessFromReadyQueue(this.readyQueue[0])
             this.scheduleProcess(timeExceededProcess)
             this.elapsedTimeForActiveProcess = 0 ;
         }
@@ -33,13 +33,13 @@ class Scheduler {
             this.elapsedTimeForActiveProcess+=1
         }
     }
-
-    removeHeadFromReadyQueue() : void{
-        this.readyQueue.splice(0,1);
+    // TODO: Some duplications
+    removeProcessFromReadyQueue(process: Process): void{
+        this.readyQueue = this.readyQueue.filter((proc) => proc.id != process.id)
         // If there are jobs waiting to be placed in memory, check if there is memory to place them
         if (!!this.waitingQueue.length){
-            this.scheduleProcess(this.waitingQueue[0])
-        }
+        this.scheduleProcess(this.waitingQueue[0])
+    }
     }
     // TODO: Some duplicate logic, perhaps revisit and simplify
     scheduleProcess(process: Process): void{

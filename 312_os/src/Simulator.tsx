@@ -38,8 +38,8 @@ function Simulator(): JSX.Element {
 
   return (
     <div className="App">
-<h1>Memory in use: {readyQueue.reduce((sum, proc)=> sum + proc.size, 0).toFixed(0)} / 1024 MB</h1>
-      <h1>Programs</h1>
+<h4>Memory in use: {readyQueue.reduce((sum, proc)=> sum + proc.size, 0).toFixed(0)} / 1024 MB</h4>
+      <h2>Programs</h2>
       <div>
         <Program
           image={calculatorImage}
@@ -56,19 +56,19 @@ function Simulator(): JSX.Element {
         scheduler={cpu.scheduler}
       />
       </div>
-      <h1>Ready Queue</h1>
+      <h2>Ready Queue</h2>
       <div style={{display:"flex"}}> 
         {readyQueue.map((process) => (
           <ProcessInfo process={process} />
         ))}
       </div>
-      <h1>IO Queue</h1>
+      <h2>IO Queue</h2>
       <div style={{display:"flex"}}> 
         {IOQueue.map((process) => (
           <ProcessInfo process={process} />
         ))}
       </div>
-      <h1>Waiting Queue</h1>
+      <h2>Waiting Queue</h2>
       <div style={{display:"flex"}}> 
         {waitingQueue.map((process) => (
           <ProcessInfo process={process} />

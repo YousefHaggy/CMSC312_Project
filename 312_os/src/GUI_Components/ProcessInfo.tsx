@@ -7,7 +7,7 @@ function ProcessInfo(props: any): JSX.Element {
   const { process, isActive }: { process: Process; isActive: boolean } = props;
 
   return (
-    <div style={{ backgroundColor: "lightblue", margin:10, padding:5 }}>
+    <div style={{ backgroundColor: process.state == "running" ? "lightgreen": "lightblue", margin:10, padding:5 }}>
       <h6 style={{margin:2}}>ID: {process.id}</h6>
       <h6 style={{margin:2}}>Size: {process.size.toFixed(0)} MB</h6>
       <h6 style={{margin:2}}>State: {process.state}</h6>
