@@ -22,8 +22,7 @@ class Process {
     this.size = Math.random() * (100-50) + 50;
     
     this.parent = parent;
-    // TODO: Once we introduce memory management and a long term Job Queue, state should start as "new"
-    this.state = "ready";
+    this.state = "new";
     this.currentIntructionIndex = 0;
     this.instructions = generateInstructionsFromTemplate(template);
     this.remaingCyclesForInstruction = this.instructions[0].numCycles || 0;

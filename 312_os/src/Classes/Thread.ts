@@ -21,6 +21,7 @@ class Thread {
     const { readyQueue } = this.scheduler;
     if (!!readyQueue?.length && readyQueue.length > this.index) {
       this.currentProcess = readyQueue[this.index];
+      
       // Sleep if instructed too
       if (!!this.sleepCounter) {
         const oldState = this.currentProcess.state;

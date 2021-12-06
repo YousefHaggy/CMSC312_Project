@@ -50,6 +50,7 @@ class Scheduler {
   }
   // TODO: Some duplicate logic, perhaps revisit and simplify
   scheduleProcess(process: Process): void {
+      
     const totalUsedMemory = this.readyQueue.reduce(
       (sum, process) => sum + process.size,
       0
