@@ -1,6 +1,5 @@
 import Instruction from "./Instruction";
 import Scheduler from "./Scheduler";
-import Thread from "./Thread";
 
 type State = "new" | "ready" | "waiting" | "running" | "terminated";
 // Process & PCB class
