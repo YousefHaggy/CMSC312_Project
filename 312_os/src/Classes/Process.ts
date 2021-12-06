@@ -47,10 +47,12 @@ class Process {
     switch (this.instructions[this.currentIntructionIndex].type) {
       case "START_CRITICAL":
         this.isInCriticalSection = true;
+        this.scheduler.processInCriticalSection = this.id;
         this.nextInstruction();
         break;
       case "END_CRITICAL":
         this.isInCriticalSection = false;
+        this.scheduler.processInCriticalSection = -1;
         this.nextInstruction();
         break;
       case "FORK":
@@ -64,7 +66,6 @@ class Process {
 
     this.remaingCyclesForInstruction -= 1;
     this.elapsedTimeSinceBurst +=1;
-    // TODO: EXECUTE STUFF
     if (this.remaingCyclesForInstruction <= 0) {
       this.nextInstruction();
     }

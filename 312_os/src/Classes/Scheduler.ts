@@ -12,6 +12,8 @@ class Scheduler {
   elapsedTimeForActiveProcess: number = 0;
   elapsedTimeForActiveProcesses: number[] = [];
 
+  // Index of process in critical section, -1 if no processes are in critical section
+  processInCriticalSection: number = -1;
   updateQueue(): void {
     for (let i = 0; i < numThreads; i++) {
       if (this.readyQueue.length <= i) {
@@ -22,7 +24,7 @@ class Scheduler {
         this.removeProcessFromReadyQueue(this.readyQueue[i]);
         this.elapsedTimeForActiveProcesses[i] = 0;
       }
-      // Single threaded Critical Section Resolving Scheme: The second condition here ensures that the RR scheduler will not
+      // Part of Critical Section Resolving Scheme: The second condition here ensures that the RR scheduler will not
       // remove a process that is currently in it's critical section. This ensures that at most one process is in a critical section at all times
       if (
         this.elapsedTimeForActiveProcesses[i] === this.timeQuantum &&
@@ -39,7 +41,6 @@ class Scheduler {
       }
     }
   }
-  // TODO: Some duplications
   removeProcessFromReadyQueue(process: Process): void {
     this.readyQueue = this.readyQueue.filter((proc) => proc.id != process.id);
     // If there are jobs waiting to be placed in memory, check if there is memory to place them
