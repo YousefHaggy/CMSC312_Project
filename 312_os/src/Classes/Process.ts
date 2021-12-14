@@ -6,7 +6,8 @@ type State = "new" | "ready" | "waiting" | "running" | "terminated";
 class Process {
   id: number;
   size: number;
-  
+  priority: number;
+
   instructions: Instruction[];
   state: State;
   currentIntructionIndex: number = 0;
@@ -16,9 +17,10 @@ class Process {
   // Pointer to scheduler
   scheduler: Scheduler;
   parent: Process | undefined;
-  constructor(pid: number, template: Instruction[], scheduler: Scheduler, parent?: Process) {
+  constructor(pid: number, priority:number, template: Instruction[], scheduler: Scheduler, parent?: Process) {
     this.scheduler = scheduler;
     this.id = pid;
+    this.priority = priority;
     this.size = Math.random() * (100-50) + 50;
     
     this.parent = parent;
@@ -55,7 +57,8 @@ class Process {
         this.nextInstruction();
         break;
       case "FORK":
-        const child = new Process(Math.floor(Math.random() * 10000), this.instructions, this.scheduler, this);
+        // Always give child highest priority 
+        const child = new Process(Math.floor(Math.random() * 10000), this.priority, this.instructions, this.scheduler, this);
         child.currentIntructionIndex = this.currentIntructionIndex + 1;
         this.scheduler.scheduleProcess(child);
         this.nextInstruction();

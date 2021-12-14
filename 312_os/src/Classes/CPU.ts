@@ -2,6 +2,8 @@ import Scheduler from "./Scheduler";
 import Process from "./Process";
 import Thread from "./Thread";
 import OS from "./OS";
+import RoundRobinScheduler from "./RoundRobinScheduler";
+import PriorityScheduler from "./PriorityScheduler";
 
 class CPU {
   scheduler: Scheduler;
@@ -9,8 +11,8 @@ class CPU {
   currentProcess!: Process;
 
   // TODO: Variable for # of thread
-  constructor(os: OS) {
-    this.scheduler = new Scheduler(os);
+  constructor(scheduler: Scheduler) {
+    this.scheduler = scheduler;
     this.startThreads();
   }
   async startThreads(): Promise<void> {

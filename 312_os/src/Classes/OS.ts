@@ -1,5 +1,7 @@
 import CPU from "./CPU";
 import Process from "./Process";
+import RoundRobinScheduler from "./RoundRobinScheduler";
+import PriorityScheduler from "./PriorityScheduler";
 
 
 class OS{
@@ -11,8 +13,8 @@ class OS{
     CPUs: CPU[] = [];
 
     constructor(){
-        const CPU1 = new CPU(this);
-        const CPU2 = new CPU(this)
+        const CPU1 = new CPU(new RoundRobinScheduler(this));
+        const CPU2 = new CPU(new PriorityScheduler(this))
         this.CPUs =[CPU1, CPU2]
     }
 }
