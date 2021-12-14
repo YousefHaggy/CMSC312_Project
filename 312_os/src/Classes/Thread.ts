@@ -7,12 +7,13 @@ import Process from "./Process";
 
 class Thread {
   index: number;
-  scheduler: Scheduler = new Scheduler();
+  scheduler: Scheduler;
   currentProcess: Process | undefined;
   sleepCounter: number = 0;
 
-  constructor(index: number) {
+  constructor(index: number, scheduler: Scheduler) {
     this.index = index;
+    this.scheduler = scheduler;
   }
   setCurrentProcess(process: Process): void {
     this.currentProcess = process;

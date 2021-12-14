@@ -1,24 +1,25 @@
 import Scheduler from "./Scheduler";
 import Process from "./Process";
 import Thread from "./Thread";
+import OS from "./OS";
 
 class CPU {
-  scheduler: Scheduler = new Scheduler();
+  scheduler: Scheduler;
   threads: any[] = [];
   currentProcess!: Process;
 
   // TODO: Variable for # of thread
-  constructor() {
+  constructor(os: OS) {
+    this.scheduler = new Scheduler(os);
     this.startThreads();
   }
   async startThreads(): Promise<void> {
     for (let i = 0; i < 4; i++) {
-      const thread = new Thread(i);
-      thread.scheduler = this.scheduler;
+      const thread = new Thread(i, this.scheduler);
       this.threads.push(thread);
     }
   }
-  cycle(): void {
+  async cycle(): Promise<void> {
     // Update the queue
     this.scheduler.updateQueue();
 

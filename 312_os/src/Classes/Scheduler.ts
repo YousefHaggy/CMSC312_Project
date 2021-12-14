@@ -1,9 +1,6 @@
 import Process from "./Process";
-const numThreads = 4;
+import OS from "./OS";
 class Scheduler {
-  public maxMemoryInMB = 1024;
-  // Waiting queue is a queue of jobs that are "waiting" for memory to be free in the ready queue
-  public waitingQueue: Process[] = [];
   public readyQueue: Process[] = [];
   public IOQueue: Process[] = [];
 
@@ -14,8 +11,15 @@ class Scheduler {
 
   // Index of process in critical section, -1 if no processes are in critical section
   processInCriticalSection: number = -1;
+
+  // Reference to OS objects
+  public OS: OS;
+
+  constructor(OS: OS){
+    this.OS = OS;
+  }
   updateQueue(): void {
-    for (let i = 0; i < numThreads; i++) {
+    for (let i = 0; i < this.OS.threadsPerCPU; i++) {
       if (this.readyQueue.length <= i) {
         return;
       }
@@ -44,8 +48,8 @@ class Scheduler {
   removeProcessFromReadyQueue(process: Process): void {
     this.readyQueue = this.readyQueue.filter((proc) => proc.id != process.id);
     // If there are jobs waiting to be placed in memory, check if there is memory to place them
-    if (!!this.waitingQueue.length) {
-      this.scheduleProcess(this.waitingQueue[0]);
+    if (!!this.OS.waitingQueue.length) {
+      this.scheduleProcess(this.OS.waitingQueue[0]);
     }
   }
   // TODO: Some duplicate logic, perhaps revisit and simplify
@@ -55,22 +59,22 @@ class Scheduler {
       (sum, process) => sum + process.size,
       0
     );
-    if (this.maxMemoryInMB - totalUsedMemory >= process.size) {
+    if (this.OS.maxMemoryInMB - totalUsedMemory >= process.size) {
       process.setState("ready");
       // If it's already in queue skip
       if (this.readyQueue.find((proc) => proc.id == process.id)) return;
       // Remove it from the jobQeue if it exists:
-      this.waitingQueue = this.waitingQueue.filter(
+      this.OS.waitingQueue = this.OS.waitingQueue.filter(
         (proc) => proc.id != process.id
       );
       this.readyQueue.push(process);
     } else {
       process.setState("waiting");
       // If it's already in queue skip
-      if (this.waitingQueue.find((proc) => proc.id == process.id)) return;
+      if (this.OS.waitingQueue.find((proc) => proc.id == process.id)) return;
       // Remove it from the readyQueue if it exists:
       this.readyQueue = this.readyQueue.filter((proc) => proc.id != process.id);
-      this.waitingQueue.push(process);
+      this.OS.waitingQueue.push(process);
     }
   }
 }
