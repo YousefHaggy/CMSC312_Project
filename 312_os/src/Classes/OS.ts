@@ -8,6 +8,11 @@ class OS {
   msPerCycle = 200;
   threadsPerCPU = 4;
   maxMemoryInMB = 1024;
+  frameSize = 8;
+
+  frames: number[] = [];
+  freeFrameIndexes: number[] = [];
+
   // Waiting queue is a queue of jobs that are "waiting" for memory to be free in the ready queue
   waitingQueue: Process[] = [];
   // List of CPUs / cores
@@ -23,6 +28,11 @@ class OS {
     const CPU1 = new CPU(new RoundRobinScheduler(this));
     const CPU2 = new CPU(new PriorityScheduler(this));
     this.CPUs = [CPU1, CPU2];
+    
+    for(let i =0;i < this.maxMemoryInMB/this.frameSize; i++){
+        this.frames.push(-1)
+        this.freeFrameIndexes.push(i)
+    }
   }
 }
 

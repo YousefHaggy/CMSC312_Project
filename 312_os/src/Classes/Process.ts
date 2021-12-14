@@ -63,6 +63,7 @@ class Process {
   nextInstruction() {
     if (this.currentIntructionIndex == this.instructions.length - 1) {
       this.state = "terminated";
+      this.scheduler.removeProcessFromReadyQueue(this);
 
       // Multi-level Parent Child Relationship: If there are any children terminate them with cascading termination
       if (!!this.child) {
@@ -83,7 +84,6 @@ class Process {
       this.instructions[this.currentIntructionIndex].numCycles || 0;
   }
   executeInstruction(): void {
-    if (this.state == "terminated") return;
     // If response time hasn't been set, set it
     if (this.responseTimeInMs == -1) {
       this.responseTimeInMs = new Date().getTime() - this.startTime.getTime();

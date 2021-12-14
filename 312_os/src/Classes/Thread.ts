@@ -10,7 +10,7 @@ class Thread {
   scheduler: Scheduler;
   currentProcess: Process | undefined;
   sleepCounter: number = 0;
-
+ 
   constructor(index: number, scheduler: Scheduler) {
     this.index = index;
     this.scheduler = scheduler;
@@ -22,7 +22,9 @@ class Thread {
     const { readyQueue } = this.scheduler;
     if (!!readyQueue?.length && readyQueue.length > this.index) {
       this.currentProcess = readyQueue[this.index];
-      
+    }
+    
+    if (!!this.currentProcess) {
       // Sleep if instructed too
       if (!!this.sleepCounter) {
         const oldState = this.currentProcess.state;
@@ -52,8 +54,8 @@ class Thread {
         ].type == "IO"
       ) {
         this.currentProcess.setState("waiting");
-        this.scheduler.IOQueue.push(this.currentProcess);
-        this.scheduler.removeProcessFromReadyQueue(readyQueue[this.index]);
+        this.scheduler.addToIOQueue(this.currentProcess);
+        this.scheduler.removeProcessFromReadyQueue(this.currentProcess);
       } else {
         this.currentProcess.setState("running");
         this.currentProcess.executeInstruction();

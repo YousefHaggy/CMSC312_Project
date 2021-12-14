@@ -25,6 +25,7 @@ class CPU {
     // Update the queue
     this.scheduler.updateQueue();
 
+
     const { readyQueue, IOQueue } = this.scheduler;
 
     // Loop through each thread

@@ -17,6 +17,9 @@ abstract class Scheduler {
 
   private totalResponseTime = 0;
   private totalTurnAroundTime = 0;
+  
+  // Backup Queue for multilevel feedback
+  FCFSQueue: Process[] = [];
 
   constructor(OS: OS){
     this.OS = OS;
@@ -26,9 +29,17 @@ abstract class Scheduler {
 
   removeProcessFromReadyQueue(process: Process): void {
     this.readyQueue = this.readyQueue.filter((proc) => proc.id != process.id);
+
     // If there are jobs waiting to be placed in memory, check if there is memory to place them
     if (!!this.OS.waitingQueue.length) {
       this.scheduleProcess(this.OS.waitingQueue[0]);
+    }
+  }
+
+  addToIOQueue(process: Process): void{
+    const ids = new Set(this.IOQueue.map(proc=>proc.id));
+    if (!ids.has(process.id)){
+      this.IOQueue.push(process)
     }
   }
   abstract scheduleProcess(process: Process): void;

@@ -16,6 +16,8 @@ const cpu2 = os.CPUs[1];
 
 function Simulator(): JSX.Element {
   const [readyQueue1, setReadyQueue1] = useState<Process[]>([]);
+  const [fcfsQueue, setFcfsQueue] = useState<Process[]>([]);
+
   const [readyQueue2, setReadyQueue2] = useState<Process[]>([]);
 
   const [IOQueue1, setIOQueue1] = useState<Process[]>([]);
@@ -37,9 +39,11 @@ function Simulator(): JSX.Element {
     // Update state variables for UI
     setReadyQueue1(cpu1.scheduler.readyQueue);
     setIOQueue1(cpu1.scheduler.IOQueue);
+    setFcfsQueue(cpu1.scheduler.FCFSQueue)
+
+  
     setReadyQueue2(cpu2.scheduler.readyQueue);
     setIOQueue2(cpu2.scheduler.IOQueue);
-
     setWaitingQueue(os.waitingQueue);
   }, [totalElapsedCycles]);
 
@@ -83,9 +87,15 @@ function Simulator(): JSX.Element {
             Avg Turnaround Time = {cpu1.scheduler.getAvgTurnAroudnTime()} ms
           </h5>
 
-          <h2>Ready Queue</h2>
+          <h2> RR Ready Queue</h2>
           <div style={{ display: "flex" }}>
             {readyQueue1.map((process) => (
+              <ProcessInfo process={process} />
+            ))}
+          </div>
+          <h2> FCFS Ready Queue</h2>
+          <div style={{ display: "flex" }}>
+            {fcfsQueue.map((process) => (
               <ProcessInfo process={process} />
             ))}
           </div>
