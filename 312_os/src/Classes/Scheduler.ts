@@ -10,6 +10,14 @@ abstract class Scheduler {
   // Reference to OS objects
   public OS: OS;
 
+
+  // Values stored for statistic compariosn of performance
+  private numOfProcessesWithResponse = 0;
+  private numOfCompletedProcesses = 0;
+
+  private totalResponseTime = 0;
+  private totalTurnAroundTime = 0;
+
   constructor(OS: OS){
     this.OS = OS;
   }
@@ -24,6 +32,24 @@ abstract class Scheduler {
     }
   }
   abstract scheduleProcess(process: Process): void;
+
+  addTurnAroundTime(time: number){
+    this.numOfCompletedProcesses+=1
+    this.totalTurnAroundTime += time;
+  }
+
+  addResponseTime(time: number){
+    this.numOfProcessesWithResponse+=1
+    this.totalResponseTime += time;
+  }
+
+  getAvgResponseTime(): number{
+    return this.totalResponseTime / this.numOfProcessesWithResponse;
+  }
+
+  getAvgTurnAroudnTime(): number{
+    return this.totalTurnAroundTime / this.numOfCompletedProcesses;
+  }
 }
 
 export default Scheduler;

@@ -49,8 +49,11 @@ function Simulator(): JSX.Element {
     <div className="App">
       <h4>
         Memory in use:{" "}
-        {(readyQueue1.reduce((sum, proc) => sum + proc.size, 0) + readyQueue2.reduce((sum, proc) => sum + proc.size, 0)).toFixed(0)} / 1024
-        MB
+        {(
+          readyQueue1.reduce((sum, proc) => sum + proc.size, 0) +
+          readyQueue2.reduce((sum, proc) => sum + proc.size, 0)
+        ).toFixed(0)}{" "}
+        / 1024 MB
       </h4>
       <h2>Programs</h2>
       <div>
@@ -58,8 +61,30 @@ function Simulator(): JSX.Element {
         <Program image={browserImage} template={browser} os={os} />{" "}
         <Program image={printerImage} template={printer} os={os} />
       </div>
-      <div style={{ display: "flex", flex: 1, width:"100vw",  flexDirection: "row" }}>
-        <div style={{ display: "flex", flex: 0.5, flexShrink:0.5, backgroundColor:"lightgrey", margin:15, flexDirection:"column" }}>
+      <div
+        style={{
+          display: "flex",
+          flex: 1,
+          width: "100vw",
+          flexDirection: "row",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flex: 0.5,
+            flexShrink: 0.5,
+            backgroundColor: "lightgrey",
+            margin: 15,
+            flexDirection: "column",
+          }}
+        >
+          <h5> Round Robin, CPU1</h5>
+          <h5>Avg Response Time = {cpu1.scheduler.getAvgResponseTime()} ms </h5>
+          <h5>
+            Avg Turnaround Time = {cpu1.scheduler.getAvgTurnAroudnTime()} ms
+          </h5>
+
           <h2>Ready Queue</h2>
           <div style={{ display: "flex" }}>
             {readyQueue1.map((process) => (
@@ -73,7 +98,21 @@ function Simulator(): JSX.Element {
             ))}
           </div>
         </div>
-        <div style={{ display: "flex", flex: 0.5, flexShrink:0.5, backgroundColor:"lightgrey", margin:15,flexDirection:"column" }}>
+        <div
+          style={{
+            display: "flex",
+            flex: 0.5,
+            flexShrink: 0.5,
+            backgroundColor: "lightgrey",
+            margin: 15,
+            flexDirection: "column",
+          }}
+        >
+          <h5>Priority Scheduler, CPU2</h5>
+          <h5>Avg Response Time = {cpu2.scheduler.getAvgResponseTime()} ms </h5>
+          <h5>
+            Avg Turnaround Time = {cpu2.scheduler.getAvgTurnAroudnTime()} ms
+          </h5>{" "}
           <h2>Ready Queue</h2>
           <div style={{ display: "flex" }}>
             {readyQueue2.map((process) => (

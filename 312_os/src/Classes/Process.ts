@@ -7,6 +7,10 @@ class Process {
   id: number;
   size: number;
   priority: number;
+  startTime: Date;
+
+  responseTimeInMs: number = -1;
+  turnaroundTimeInMs: number = -1;
 
   instructions: Instruction[];
   state: State;
@@ -17,12 +21,20 @@ class Process {
   // Pointer to scheduler
   scheduler: Scheduler;
   parent: Process | undefined;
-  constructor(pid: number, priority:number, template: Instruction[], scheduler: Scheduler, parent?: Process) {
+  constructor(
+    pid: number,
+    priority: number,
+    template: Instruction[],
+    scheduler: Scheduler,
+    parent?: Process
+  ) {
     this.scheduler = scheduler;
     this.id = pid;
     this.priority = priority;
-    this.size = Math.random() * (100-50) + 50;
-    
+    this.size = Math.random() * (100 - 50) + 50;
+
+    this.startTime = new Date();
+
     this.parent = parent;
     this.state = "new";
     this.currentIntructionIndex = 0;
@@ -35,15 +47,26 @@ class Process {
   nextInstruction() {
     if (this.currentIntructionIndex == this.instructions.length - 1) {
       this.state = "terminated";
+      if (this.turnaroundTimeInMs == -1) {
+        this.turnaroundTimeInMs =
+          new Date().getTime() - this.startTime.getTime();
+        this.scheduler.addTurnAroundTime(this.turnaroundTimeInMs);
+      }
+
       return;
     }
     this.currentIntructionIndex += 1;
     this.remaingCyclesForInstruction =
       this.instructions[this.currentIntructionIndex].numCycles || 0;
-
-    const currentInstruction = this.instructions[this.currentIntructionIndex];
   }
   executeInstruction(): void {
+    // If response time hasn't been set, set it
+    if (this.responseTimeInMs == -1) {
+      this.responseTimeInMs =
+        new Date().getTime() - this.startTime.getTime();
+      this.scheduler.addResponseTime(this.responseTimeInMs);
+    }
+
     // If instruction is just marking critical section, move to next instruction
     switch (this.instructions[this.currentIntructionIndex].type) {
       case "START_CRITICAL":
@@ -57,17 +80,22 @@ class Process {
         this.nextInstruction();
         break;
       case "FORK":
-        // Always give child highest priority 
-        const child = new Process(Math.floor(Math.random() * 10000), this.priority, this.instructions, this.scheduler, this);
+        // Always give child highest priority
+        const child = new Process(
+          Math.floor(Math.random() * 10000),
+          this.priority,
+          this.instructions,
+          this.scheduler,
+          this
+        );
         child.currentIntructionIndex = this.currentIntructionIndex + 1;
         this.scheduler.scheduleProcess(child);
         this.nextInstruction();
         break;
-
     }
 
     this.remaingCyclesForInstruction -= 1;
-    this.elapsedTimeSinceBurst +=1;
+    this.elapsedTimeSinceBurst += 1;
     if (this.remaingCyclesForInstruction <= 0) {
       this.nextInstruction();
     }
