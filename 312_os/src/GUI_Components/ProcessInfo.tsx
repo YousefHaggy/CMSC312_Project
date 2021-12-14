@@ -11,7 +11,7 @@ function ProcessInfo(props: any): JSX.Element {
       <h6 style={{margin:2}}>ID: {process.id}</h6>
       <h6 style={{margin:2}}>Parent ID: {process.parent?.id}</h6>
       <h6 style={{margin:2}}>Priority: {process.priority}</h6>
-      <h6 style={{margin:2}}>Size: {process.size.toFixed(0)} MB</h6>
+      <h6 style={{margin:2}}>Size: {process.size.toFixed(0)} MB, {process.numOfPages} pages</h6>
       <h6 style={{margin:2}}>State: {process.state}</h6>
       <h6 style={{margin:2}}>IN CRITICAL SECTION? {String(process.isInCriticalSection)}</h6>
       <h6 style={{margin:2}}>Current Instruction Index: {process.currentIntructionIndex}</h6>

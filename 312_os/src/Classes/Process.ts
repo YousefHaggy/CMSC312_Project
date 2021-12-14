@@ -9,7 +9,8 @@ class Process {
   size: number;
   priority: number;
   startTime: Date;
-
+  numOfPages: number;
+  framesInUseByIndex: number[] = [];
   responseTimeInMs: number = -1;
   turnaroundTimeInMs: number = -1;
 
@@ -39,6 +40,8 @@ class Process {
     this.id = pid;
     this.priority = priority;
     this.size = Math.random() * (100 - 50) + 50;
+    // How many pages it needs
+    this.numOfPages = Math.ceil(this.size / this.scheduler.OS.frameSize)
 
     // Random chance to be producer rather than consumer for messaging
     this.isProducer = Math.random() > 0.5 ? true : false;

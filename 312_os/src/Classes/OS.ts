@@ -11,7 +11,7 @@ class OS {
   frameSize = 8;
 
   frames: number[] = [];
-  freeFrameIndexes: number[] = [];
+  freeFrameIndexes: Set<number> = new Set();
 
   // Waiting queue is a queue of jobs that are "waiting" for memory to be free in the ready queue
   waitingQueue: Process[] = [];
@@ -31,7 +31,7 @@ class OS {
     
     for(let i =0;i < this.maxMemoryInMB/this.frameSize; i++){
         this.frames.push(-1)
-        this.freeFrameIndexes.push(i)
+        this.freeFrameIndexes.add(i)
     }
   }
 }

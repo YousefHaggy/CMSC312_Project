@@ -49,14 +49,18 @@ function Simulator(): JSX.Element {
 
   return (
     <div className="App">
-      <h4>
+      <h5>
         Memory in use:{" "}
         {(
-          readyQueue1.reduce((sum, proc) => sum + proc.size, 0) +
-          readyQueue2.reduce((sum, proc) => sum + proc.size, 0)
+         (os.frames.length - os.freeFrameIndexes.size) * os.frameSize
         ).toFixed(0)}{" "}
         / 1024 MB
-      </h4>
+      </h5>
+      <h5>
+        {
+         os.frames.length - os.freeFrameIndexes.size
+        } / {os.frames.length} Pages 
+      </h5>
       <h2>Programs</h2>
       <div>
         <Program image={calculatorImage} template={calculator} os={os} />

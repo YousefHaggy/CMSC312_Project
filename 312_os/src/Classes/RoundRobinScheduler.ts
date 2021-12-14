@@ -2,7 +2,7 @@ import Process from "./Process";
 import OS from "./OS";
 import Scheduler from "./Scheduler";
 
-// Note: Multilevel has FCFS queue for slow processes
+// Note: Multilevel so has FCFS queue for slow processes
 class RoundRobinScheduler extends Scheduler {
   // Trackers for Round Robin Scheduling
   timeQuantum = 10;
@@ -21,7 +21,7 @@ class RoundRobinScheduler extends Scheduler {
   FCFSQueue: Process[] = [];
   // Hashtable tracking the stuff mentioned above
   exceededQuantumCount: any = {};
-ageOnFCFS: any = {};
+  ageOnFCFS: any = {};
   // Reference to OS objects
   public OS: OS;
 
@@ -30,24 +30,22 @@ ageOnFCFS: any = {};
     this.OS = OS;
   }
   updateQueue(): void {
-
     // For multilevel feedback queue, to prevent starvation move old entries bcak to RR
-    this.FCFSQueue.forEach((proc, index, array)=>{
-        this.ageOnFCFS[proc.id] = this.ageOnFCFS[proc.id] + 1 || 1;
-        if (this.ageOnFCFS[proc.id] >= 100) {
-            this.scheduleProcess(proc);
-            this.ageOnFCFS[proc.id] = 0;
-            array.splice(index, 1)
-        }
-    })
+    this.FCFSQueue.forEach((proc, index, array) => {
+      this.ageOnFCFS[proc.id] = this.ageOnFCFS[proc.id] + 1 || 1;
+      if (this.ageOnFCFS[proc.id] >= 100) {
+        this.scheduleProcess(proc);
+        this.ageOnFCFS[proc.id] = 0;
+        array.splice(index, 1);
+      }
+    });
     // Or if Ready Queue empty, promote 1 process from FCFS to be processed
     if (this.readyQueue.length == 0) {
-        const procToPromote = this.FCFSQueue.shift()
-        if (!!procToPromote){
-            this.scheduleProcess(procToPromote);
-            this.ageOnFCFS[procToPromote.id] = 0;
-
-        }
+      const procToPromote = this.FCFSQueue.shift();
+      if (!!procToPromote) {
+        this.scheduleProcess(procToPromote);
+        this.ageOnFCFS[procToPromote.id] = 0;
+      }
     }
 
     for (let i = 0; i < this.OS.threadsPerCPU; i++) {
@@ -73,10 +71,10 @@ ageOnFCFS: any = {};
         this.removeProcessFromReadyQueue(this.readyQueue[i]);
 
         // Move to slower queue if repeat offender!
-        if (this.exceededQuantumCount[timeExceededProcess.id]  >= 1) {
-        timeExceededProcess.setState("waiting")
+        if (this.exceededQuantumCount[timeExceededProcess.id] >= 1) {
+          timeExceededProcess.setState("waiting");
           this.FCFSQueue.push(timeExceededProcess);
-          this.exceededQuantumCount[timeExceededProcess.id] = 0
+          this.exceededQuantumCount[timeExceededProcess.id] = 0;
         } else this.scheduleProcess(timeExceededProcess);
 
         this.elapsedTimeForActiveProcesses[i] = 0;
@@ -86,30 +84,7 @@ ageOnFCFS: any = {};
     }
   }
 
-  // TODO: Some duplicate logic, perhaps revisit and simplify
-  scheduleProcess(process: Process): void {
-    const totalUsedMemory = this.readyQueue.reduce(
-      (sum, process) => sum + process.size,
-      0
-    );
-    if (this.OS.maxMemoryInMB - totalUsedMemory >= process.size) {
-      process.setState("ready");
-      // If it's already in queue skip
-      if (this.readyQueue.find((proc) => proc.id == process.id)) return;
-      // Remove it from the jobQeue if it exists:
-      this.OS.waitingQueue = this.OS.waitingQueue.filter(
-        (proc) => proc.id != process.id
-      );
-      this.readyQueue.push(process);
-    } else {
-      process.setState("waiting");
-      // If it's already in queue skip
-      if (this.OS.waitingQueue.find((proc) => proc.id == process.id)) return;
-      // Remove it from the readyQueue if it exists:
-      this.readyQueue = this.readyQueue.filter((proc) => proc.id != process.id);
-      this.OS.waitingQueue.push(process);
-    }
-  }
+
 }
 
 export default RoundRobinScheduler;
