@@ -10,7 +10,6 @@ import printerImage from "./images/printer.png";
 
 import ProcessInfo from "./GUI_Components/ProcessInfo";
 import OS from "./Classes/OS";
-const msPerCycle = 200;
 const os = new OS();
 const cpu1 = os.CPUs[0];
 const cpu2 = os.CPUs[1];
@@ -29,13 +28,12 @@ function Simulator(): JSX.Element {
     const interval = setInterval(() => {
       os.CPUs.forEach((cpu) => cpu.cycle());
       setTotalElapsedCycles((prev) => prev + 1);
-    }, msPerCycle);
+    }, os.msPerCycle);
 
     return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
   }, []);
 
   useEffect(() => {
-    console.log(cpu1.scheduler.readyQueue, cpu1.scheduler.IOQueue);
     // Update state variables for UI
     setReadyQueue1(cpu1.scheduler.readyQueue);
     setIOQueue1(cpu1.scheduler.IOQueue);

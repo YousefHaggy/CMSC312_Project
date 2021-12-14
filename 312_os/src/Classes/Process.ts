@@ -21,6 +21,12 @@ class Process {
   // Pointer to scheduler
   scheduler: Scheduler;
   parent: Process | undefined;
+  child: Process | undefined;
+
+  // Interprocess Communication Method: A message passing approach,
+  // Unidirectional with a single Queue / Mailbox. A process either reads or adds to queue
+  isProducer: boolean = false;
+
   constructor(
     pid: number,
     priority: number,
@@ -32,6 +38,9 @@ class Process {
     this.id = pid;
     this.priority = priority;
     this.size = Math.random() * (100 - 50) + 50;
+
+    // Random chance to be producer rather than consumer for messaging
+    this.isProducer = Math.random() > 0.5 ? true : false;
 
     this.startTime = new Date();
 
@@ -47,6 +56,13 @@ class Process {
   nextInstruction() {
     if (this.currentIntructionIndex == this.instructions.length - 1) {
       this.state = "terminated";
+
+      // Multi-level Parent Child Relationship: If there are any children terminate them with cascading termination
+      if (!!this.child) {
+        this.child.state = "terminated";
+        this.scheduler.removeProcessFromReadyQueue(this.child);
+      }
+
       if (this.turnaroundTimeInMs == -1) {
         this.turnaroundTimeInMs =
           new Date().getTime() - this.startTime.getTime();
@@ -60,10 +76,10 @@ class Process {
       this.instructions[this.currentIntructionIndex].numCycles || 0;
   }
   executeInstruction(): void {
+    if (this.state == "terminated") return;
     // If response time hasn't been set, set it
     if (this.responseTimeInMs == -1) {
-      this.responseTimeInMs =
-        new Date().getTime() - this.startTime.getTime();
+      this.responseTimeInMs = new Date().getTime() - this.startTime.getTime();
       this.scheduler.addResponseTime(this.responseTimeInMs);
     }
 
@@ -96,6 +112,17 @@ class Process {
 
     this.remaingCyclesForInstruction -= 1;
     this.elapsedTimeSinceBurst += 1;
+
+    // For simulated IPC:
+    // If producer 5% chance to send message, if consumer read any messages
+    const messageQueue = this.scheduler.OS.messageQueue;
+    if (Math.random() > 0.05 && this.isProducer) {
+      messageQueue.push("Random MEssage: " + Math.floor(Math.random() * 1000));
+    } else if (!this.isProducer && messageQueue.length > 0) {
+      console.log("Message from mailbox", messageQueue.shift());
+      console.log("MESSAGE QUEUE", messageQueue);
+    }
+
     if (this.remaingCyclesForInstruction <= 0) {
       this.nextInstruction();
     }
