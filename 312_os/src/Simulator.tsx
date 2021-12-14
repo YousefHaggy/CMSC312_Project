@@ -12,10 +12,16 @@ import ProcessInfo from "./GUI_Components/ProcessInfo";
 import OS from "./Classes/OS";
 const msPerCycle = 200;
 const os = new OS();
-const cpu = os.CPUs[1];
+const cpu1 = os.CPUs[0];
+const cpu2 = os.CPUs[1];
+
 function Simulator(): JSX.Element {
-  const [readyQueue, setReadyQueue] = useState<Process[]>([]);
-  const [IOQueue, setIOQueue] = useState<Process[]>([]);
+  const [readyQueue1, setReadyQueue1] = useState<Process[]>([]);
+  const [readyQueue2, setReadyQueue2] = useState<Process[]>([]);
+
+  const [IOQueue1, setIOQueue1] = useState<Process[]>([]);
+  const [IOQueue2, setIOQueue2] = useState<Process[]>([]);
+
   const [waitingQueue, setWaitingQueue] = useState<Process[]>([]);
 
   const [totalElapsedCycles, setTotalElapsedCycles] = useState(0);
@@ -29,10 +35,13 @@ function Simulator(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    console.log(cpu.scheduler.readyQueue, cpu.scheduler.IOQueue);
+    console.log(cpu1.scheduler.readyQueue, cpu1.scheduler.IOQueue);
     // Update state variables for UI
-    setReadyQueue(cpu.scheduler.readyQueue);
-    setIOQueue(cpu.scheduler.IOQueue);
+    setReadyQueue1(cpu1.scheduler.readyQueue);
+    setIOQueue1(cpu1.scheduler.IOQueue);
+    setReadyQueue2(cpu2.scheduler.readyQueue);
+    setIOQueue2(cpu2.scheduler.IOQueue);
+
     setWaitingQueue(os.waitingQueue);
   }, [totalElapsedCycles]);
 
@@ -40,39 +49,46 @@ function Simulator(): JSX.Element {
     <div className="App">
       <h4>
         Memory in use:{" "}
-        {readyQueue.reduce((sum, proc) => sum + proc.size, 0).toFixed(0)} / 1024
+        {(readyQueue1.reduce((sum, proc) => sum + proc.size, 0) + readyQueue2.reduce((sum, proc) => sum + proc.size, 0)).toFixed(0)} / 1024
         MB
       </h4>
       <h2>Programs</h2>
       <div>
-        <Program
-          image={calculatorImage}
-          template={calculator}
-          scheduler={cpu.scheduler}
-        />
-        <Program
-          image={browserImage}
-          template={browser}
-          scheduler={cpu.scheduler}
-        />{" "}
-        <Program
-          image={printerImage}
-          template={printer}
-          scheduler={cpu.scheduler}
-        />
+        <Program image={calculatorImage} template={calculator} os={os} />
+        <Program image={browserImage} template={browser} os={os} />{" "}
+        <Program image={printerImage} template={printer} os={os} />
       </div>
-      <h2>Ready Queue</h2>
-      <div style={{ display: "flex" }}>
-        {readyQueue.map((process) => (
-          <ProcessInfo process={process} />
-        ))}
+      <div style={{ display: "flex", flex: 1, width:"100vw",  flexDirection: "row" }}>
+        <div style={{ display: "flex", flex: 0.5, flexShrink:0.5, backgroundColor:"lightgrey", margin:15, flexDirection:"column" }}>
+          <h2>Ready Queue</h2>
+          <div style={{ display: "flex" }}>
+            {readyQueue1.map((process) => (
+              <ProcessInfo process={process} />
+            ))}
+          </div>
+          <h2>IO Queue</h2>
+          <div style={{ display: "flex" }}>
+            {IOQueue1.map((process) => (
+              <ProcessInfo process={process} />
+            ))}
+          </div>
+        </div>
+        <div style={{ display: "flex", flex: 0.5, flexShrink:0.5, backgroundColor:"lightgrey", margin:15,flexDirection:"column" }}>
+          <h2>Ready Queue</h2>
+          <div style={{ display: "flex" }}>
+            {readyQueue2.map((process) => (
+              <ProcessInfo process={process} />
+            ))}
+          </div>
+          <h2>IO Queue</h2>
+          <div style={{ display: "flex" }}>
+            {IOQueue2.map((process) => (
+              <ProcessInfo process={process} />
+            ))}
+          </div>
+        </div>
       </div>
-      <h2>IO Queue</h2>
-      <div style={{ display: "flex" }}>
-        {IOQueue.map((process) => (
-          <ProcessInfo process={process} />
-        ))}
-      </div>
+
       <h2>Waiting Queue</h2>
       <div style={{ display: "flex" }}>
         {waitingQueue.map((process) => (
