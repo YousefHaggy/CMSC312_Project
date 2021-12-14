@@ -2,25 +2,28 @@ import CPU from "./CPU";
 import Process from "./Process";
 import RoundRobinScheduler from "./RoundRobinScheduler";
 import PriorityScheduler from "./PriorityScheduler";
+import EventEmitter from "events";
 
+class OS {
+  msPerCycle = 200;
+  threadsPerCPU = 4;
+  maxMemoryInMB = 1024;
+  // Waiting queue is a queue of jobs that are "waiting" for memory to be free in the ready queue
+  waitingQueue: Process[] = [];
+  // List of CPUs / cores
+  CPUs: CPU[] = [];
 
-class OS{
-     msPerCycle = 200;
-
-    threadsPerCPU = 4;
-    maxMemoryInMB = 1024;
-    // Waiting queue is a queue of jobs that are "waiting" for memory to be free in the ready queue
-    waitingQueue: Process[] = [];
-    // List of CPUs / cores
-    CPUs: CPU[] = [];
-
-     // Interprocess Communication Method: A message passing approach
+  // Interprocess Communication Method: A message passing approach
   messageQueue: string[] = [];
-    constructor(){
-        const CPU1 = new CPU(new RoundRobinScheduler(this));
-        const CPU2 = new CPU(new PriorityScheduler(this))
-        this.CPUs =[CPU1, CPU2]
-    }
+
+  // Second IPC Method: DIRECT COMMUNICATION using event listener to mimic send/receive
+  // For convenience, direct communication will only occur between parent and child
+  messageEmmiter: EventEmitter = new EventEmitter();
+  constructor() {
+    const CPU1 = new CPU(new RoundRobinScheduler(this));
+    const CPU2 = new CPU(new PriorityScheduler(this));
+    this.CPUs = [CPU1, CPU2];
+  }
 }
 
-export default OS
+export default OS;

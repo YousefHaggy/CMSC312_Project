@@ -1,5 +1,6 @@
 import Instruction from "./Instruction";
 import Scheduler from "./Scheduler";
+import EventEmitter from "events";
 
 type State = "new" | "ready" | "waiting" | "running" | "terminated";
 // Process & PCB class
@@ -24,7 +25,7 @@ class Process {
   child: Process | undefined;
 
   // Interprocess Communication Method: A message passing approach,
-  // Unidirectional with a single Queue / Mailbox. A process either reads or adds to queue
+  // INDIRECT COMMUNICATION with a single Queue. A process either reads or adds to queue
   isProducer: boolean = false;
 
   constructor(
@@ -45,6 +46,12 @@ class Process {
     this.startTime = new Date();
 
     this.parent = parent;
+
+    // Listen to direct messaged to current process id
+    this.scheduler.OS.messageEmmiter.on(this.id.toString(), (data)=>{
+      console.log(`Process ${this.id} received a message: ${data}`)
+    })
+
     this.state = "new";
     this.currentIntructionIndex = 0;
     this.instructions = generateInstructionsFromTemplate(template);
@@ -113,15 +120,21 @@ class Process {
     this.remaingCyclesForInstruction -= 1;
     this.elapsedTimeSinceBurst += 1;
 
-    // For simulated IPC:
-    // If producer 5% chance to send message, if consumer read any messages
+    // Note: Console has a lot of junk so you'll have to search for messages
+    // For simulated IPC, indirect:
+    // If producer .005% chance to send message, if consumer read any messages
     const messageQueue = this.scheduler.OS.messageQueue;
-    if (Math.random() > 0.05 && this.isProducer) {
+    if (Math.random() > 0.0005 && this.isProducer) {
       messageQueue.push("Random MEssage: " + Math.floor(Math.random() * 1000));
     } else if (!this.isProducer && messageQueue.length > 0) {
-      console.log("Message from mailbox", messageQueue.shift());
+      console.log("Message from queue", messageQueue.shift());
       console.log("MESSAGE QUEUE", messageQueue);
     }
+
+    // For simualted IPC, direct:
+    // Random chance of messaging parent, random chance of messagin child
+    if (!!this.parent && Math.random() < 0.05) this.scheduler.OS.messageEmmiter.emit(this.parent.id.toString(), "Hi parent! From your child "+ this.id.toString())
+    if (!!this.child && Math.random() < 0.05) this.scheduler.OS.messageEmmiter.emit(this.child.id.toString(), "Hi child!")
 
     if (this.remaingCyclesForInstruction <= 0) {
       this.nextInstruction();
